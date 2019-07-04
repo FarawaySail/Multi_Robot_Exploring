@@ -1,0 +1,41 @@
+<launch>
+
+  <arg name="x" default="5.0" />
+  <arg name="y" default=".0" />
+  <arg name="z" default="0.0" />
+  <arg name="yaw" default="-2.0" />
+
+  <!-- Setup controllers -->
+  <!-- rosparam file="$(find fetch_gazebo)/param/freight_controllers.yaml" command="load" / -->
+  <group ns="car1">
+  <!-- URDF and TF support -->
+  <param name="robot_description" command="$(find xacro)/xacro.py $(find robot_sim_demo)/urdf/robot.xacro" />
+  <!-- Put a robot in gazebo, make it look pretty -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" 
+        args="-urdf -x $(arg x) -y $(arg y) -z $(arg z) -Y $(arg yaw) -model xbot-u -param robot_description"/>
+
+  <!-- To make the interface of simulation identical to real XBot -->
+  <node pkg="nodelet" type="nodelet" name="mobile_base_nodelet_manager" args="manager"/>
+  <node pkg="nodelet" type="nodelet" name="cmd_vel_mux"  args="load yocs_cmd_vel_mux/CmdVelMuxNodelet mobile_base_nodelet_manager">
+    <param name="yaml_cfg_file" value="$(find robot_sim_demo)/param/mux.yaml"/>
+    <remap from="cmd_vel_mux/output/cmd_vel" to="cmd_vel"/>
+  </node>
+  </group>
+
+  <!-- Setup controllers -->
+  <!-- rosparam file="$(find fetch_gazebo)/param/freight_controllers.yaml" command="load" / -->
+  <group ns="car2">
+  <!-- URDF and TF support -->
+  <param name="robot_description" command="$(find xacro)/xacro.py $(find robot_sim_demo)/urdf/robot.xacro" />
+  <!-- Put a robot in gazebo, make it look pretty -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" 
+        args="-urdf 0 $(arg x) -y $(arg y) -z $(arg z) -Y $(arg yaw) -model xbot-u2 -param robot_description"/>
+
+  <!-- To make the interface of simulation identical to real XBot -->
+  <node pkg="nodelet" type="nodelet" name="mobile_base_nodelet_manager" args="manager"/>
+  <node pkg="nodelet" type="nodelet" name="cmd_vel_mux"  args="load yocs_cmd_vel_mux/CmdVelMuxNodelet mobile_base_nodelet_manager">
+    <param name="yaml_cfg_file" value="$(find robot_sim_demo)/param/mux.yaml"/>
+    <remap from="cmd_vel_mux/output/cmd_vel" to="cmd_vel"/>
+  </node>
+  </group>
+</launch>
