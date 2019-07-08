@@ -20,4 +20,4 @@
 - ...
 
 ## Remarks
-- 深度图实际上是OpenCV类型为32FC1的Mat。其中每个数是$0~10$的浮点数。当使用`rostopic echo /camera/depth/image_raw`时，表面上输出为$0~255$的整数，实际上得把三个数连起来看才可以。具体可以参考image_view函数，或者通过rviz仿真，改变Normalize Range来观察。
+- 深度图实际上是OpenCV类型为32FC1的Mat。其中每个数是0-10的浮点数。当使用`rostopic echo /camera/depth/image_raw`时，表面上输出为0-255的数，实际上得把三个数连起来看才可以。具体可以参考image_view函数，或者通过rviz仿真，改变Normalize Range来观察。
